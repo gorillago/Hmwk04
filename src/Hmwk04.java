@@ -1,18 +1,24 @@
+import java.io.File;
+import java.io.FileNotFoundException;
+import java.util.Scanner;
+
 public class Hmwk04 {
     public static void main(String[] args) {
-        String password = "Testing $*%&&#*";
-        String passwords[] = new String[1];
-        passwords[0] = password;
-        printOutput(passwords);
-        System.out.print(containsLowercaseCharacters(password) + " " + containsUppercaseCharacters(password) + " " + specialCharacters(password));
+        File inputFile = new File(fetchFileName(args));
+        int max = fetchMaximumSize(args);
+        String[] passwords = new String[max];
+        int count = readFromFile(passwords, inputFile);
+
+        printOutput(passwords, count);
+
     }
 
 
-    private static void printOutput(String[] passwords) {
+    private static void printOutput(String[] passwords, int count) {
         System.out.printf("Number        User Password  Length  Lower  Upper  Digit  Special  Range");
-        for (int i = 0; i < passwords.length; i++) {
+        for (int i = 0; i < count; i++) {
             String password = passwords[i];
-            System.out.printf("\n%6d%21s%8d%7s%7s%7s", i+1, password, password.length(),
+            System.out.printf("\n%6d%21s%8d%7s%7s%7s%9d", i+1, password, password.length(),
                     containsLowercaseCharacters(password), containsUppercaseCharacters(password),
                     containsDigits(password), specialCharacters(password));
         }
@@ -52,6 +58,30 @@ public class Hmwk04 {
         return found;
     }
 
+    private static int readFromFile(String[] passwords, File inputFile) {
+        int count = 0;
+        int max = passwords.length;
+
+        try {
+            Scanner input = new Scanner(inputFile);
+            if (input.hasNext()) {
+                while ((count < max) && input.hasNext()) {
+                    passwords[count] = input.next().trim();
+                    count++;
+                }
+            } else {
+                System.out.printf("File \"%s\" is empty.\n", inputFile);
+                System.exit(1);
+            }
+        } catch (FileNotFoundException e) {
+            System.out.printf("File \"%s\" not found.\n", inputFile);
+            System.exit(1);
+        }
+
+
+        return count;
+    }
+
     public static int specialCharacters(String password) {
         String characters = " !\"#$%&'()*+,-./:;<=>?@[\\]^_`{|}~";
         int count = 0;
@@ -61,5 +91,26 @@ public class Hmwk04 {
             }
         }
         return count;
+    }
+
+    private static String fetchFileName(String[] args) {
+        String result = "userpasswords.txt";
+        if (args.length > 0) {
+            result = args[0];
+        }
+        return result;
+    }
+
+    private static int fetchMaximumSize(String[] args) {
+        int result = 100;
+        if (args.length > 1) {
+            try {
+                result = Integer.parseInt(args[1]);
+            } catch(NumberFormatException e) {
+                System.out.printf("\"%s\" is not a valid integer.\n", args[1]);
+                System.exit(1);
+            }
+        }
+        return result;
     }
 }
