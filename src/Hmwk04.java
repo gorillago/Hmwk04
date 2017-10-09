@@ -13,17 +13,17 @@ public class Hmwk04 {
 
     }
 
-
     private static void printOutput(String[] passwords, int count) {
         System.out.printf("Number        User Password  Length  Lower  Upper  Digit  Special  Range");
         for (int i = 0; i < count; i++) {
             String password = passwords[i];
-            System.out.printf("\n%6d%21s%8d%7s%7s%7s%9d", i+1, password, password.length(),
+            System.out.printf("\n%6d%21s%8d%7s%7s%7s%9d%7d", i+1, password, password.length(),
                     containsLowercaseCharacters(password), containsUppercaseCharacters(password),
-                    containsDigits(password), specialCharacters(password));
+                    containsDigits(password), specialCharacters(password), getRange(password));
         }
     }
-    public static boolean containsLowercaseCharacters(String password) {
+
+    private static boolean containsLowercaseCharacters(String password) {
         char[] passwordCharacters = password.toCharArray();
         boolean found = false;
         int count = 0;
@@ -35,7 +35,7 @@ public class Hmwk04 {
         return found;
     }
 
-    public static boolean containsUppercaseCharacters(String password) {
+    private static boolean containsUppercaseCharacters(String password) {
         char[] passwordCharacters = password.toCharArray();
         boolean found = false;
         int count = 0;
@@ -47,7 +47,7 @@ public class Hmwk04 {
         return found;
     }
 
-    public static boolean containsDigits(String password) {
+    private static boolean containsDigits(String password) {
         boolean found = false;
         char ch = '0';
 
@@ -82,7 +82,7 @@ public class Hmwk04 {
         return count;
     }
 
-    public static int specialCharacters(String password) {
+    private static int specialCharacters(String password) {
         String characters = " !\"#$%&'()*+,-./:;<=>?@[\\]^_`{|}~";
         int count = 0;
         for (char compareChar : characters.toCharArray()) {
@@ -91,6 +91,28 @@ public class Hmwk04 {
             }
         }
         return count;
+    }
+
+    private static int getRange(String password) {
+        int range = 0;
+
+        boolean digit = containsDigits(password);
+        boolean lowerCase = containsLowercaseCharacters(password);
+        boolean upperCase = containsUppercaseCharacters(password);
+        int specialChars = specialCharacters(password);
+
+        if(digit) {
+            range += 10;
+        }
+        if (lowerCase) {
+            range += 26;
+        }
+        if (upperCase) {
+            range += 26;
+        }
+        range += specialChars;
+
+        return range;
     }
 
     private static String fetchFileName(String[] args) {
