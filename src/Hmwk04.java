@@ -70,11 +70,11 @@ public class Hmwk04 {
                     count++;
                 }
             } else {
-                System.out.printf("File \"%s\" is empty.\n", inputFile);
+                System.out.printf("File \"%s\" is empty.\n", inputFile.getName());
                 System.exit(1);
             }
         } catch (FileNotFoundException e) {
-            System.out.printf("File \"%s\" not found.\n", inputFile);
+            System.out.printf("File \"%s\" not found.\n", inputFile.getName());
             System.exit(1);
         }
 
